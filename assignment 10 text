@@ -1,0 +1,103 @@
+!pip install nltk
+
+
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('universal_tagset')
+
+
+text = open(r"C:\Users\Himanshu\Desktop\dsbda\assignment 10\text_doc.txt").read()
+text
+
+
+tokens_sent = nltk.sent_tokenize(text)
+tokens_word = nltk.word_tokenize(text)
+
+
+tokens_word_lower = []
+for word in tokens_word :
+    tokens_word_lower.append(word.lower())
+print(tokens_word_lower)
+
+
+tagged = nltk.pos_tag(tokens_word, tagset = 'universal')
+tagged
+
+
+from nltk.corpus import stopwords
+stop_words = stopwords.words('english')
+print(stop_words)    
+
+
+clean_words = []
+for word in tokens_word_lower :
+    if word not in stop_words :
+        clean_words.append(word)
+print(clean_words)
+
+
+from nltk.stem import PorterStemmer
+stemmer = PorterStemmer()
+stem_word = []
+for word in tokens_word_lower : 
+    stem_word.append(stemmer.stem(word))
+print(stem_word)
+
+
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+lem_word = []
+for word in tokens_word_lower : 
+    lem_word.append(lemmatizer.lemmatize(word))
+print(lem_word)
+
+
+corpus = tokens_sent
+n_cor = len(corpus)
+word_set = set()
+for doc in corpus :
+    words = doc.split(" ")
+    word_set.update(words)
+print("Number of words in corpus : ", len(word_set))
+print("Words in corpus : ", word_set)
+
+
+n_words_set = len(word_set)
+df_tf = pd.DataFrame(np.zeros((n_cor, n_words_set)), columns = list(word_set))
+for i in range(n_cor) :
+    words = corpus[i].split(" ")
+    for word in words :
+        df_tf[word][i] = words.count(word)/len(words)
+df_tf
+
+
+print("IDF of: ")
+idf = {}
+for word in word_set:
+    k = 0
+    for i in range(n_cor):
+        words = corpus[i].split(" ")
+        if word in words:
+            k+=1
+    idf[word] = np.log10(n_cor/k)
+    print("{}:{}".format(word,idf[word]))
+
+
+df_tf_idf = df_tf.copy()
+for word in word_set :
+    for i in range(n_cor) :
+        df_tf_idf[word][i] = df_tf[word][i] * idf[word]
+df_tf_idf
+
+
+
+
+
+
+
+
+
+
+
