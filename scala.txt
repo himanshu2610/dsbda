@@ -1,0 +1,7 @@
+spark-shell
+var x = sc.textFile('himanshu.txt')
+var y = x.flatMap(_.split(" "))
+var z = y.map((_, 1))
+var word_count = z.reduceByKey(_+_)
+word_count.saveAsTextFile("output1")
+word_count.foreach(println)
