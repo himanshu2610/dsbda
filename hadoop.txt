@@ -1,0 +1,19 @@
+open terminal in sbin folder
+type: start-dfs.sh
+type: start-yarn.sh
+type: jps 
+(if jps does not have 6 then :
+	open terminal in bin folder
+	type : hadoop namenode -format
+)
+create new folder in sbin folder -- type: hdfs dfs -mkdir /folder1
+create new folder in home(open terminal in home) - touch himanshu.txt (type something in it)
+
+type: hadoop fs -put /home/hadoop/himanshu.txt /folder1
+
+type: yarn jar (path of example jar) wordcount /folder1 /himanshuOutput
+
+type: hdfs dfs -cat /himanshuOutput/part-r-00000
+
+
+  
